@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sazón · Recetas de la comunidad</title>
+<meta name="description" content="Sazón es una app para crear, guardar y compartir recetas con tu comunidad. Descargá el APK para Android.">
+<link rel="icon" href="icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+  /* =========================================================
+     ✏️  CONFIGURACIÓN: completá estos 3 links y listo.
+     ========================================================= */
+  const CONFIG = {
+    // Link directo al APK (GitHub Releases o el link de descarga del build en expo.dev)
+    apkUrl: 'https://github.com/GoobleCo/RecetasParaCompartir/releases/latest/download/sazon.apk',
+    // Repositorio del código fuente
+    repoUrl: 'https://github.com/GoobleCo/RecetasParaCompartir',
+    // Autor/a del proyecto
+    author: 'Tu Nombre',
+  };
+</script>
+<style>
+  :root {
+    --bg: #FFF8F1; --surface: #FFFFFF; --surface-2: #FBEFE4; --text: #2A1E17; --muted: #7A6A5F;
+    --border: #EADBCB; --primary: #D9480F; --primary-soft: #FDE3D3; --on-primary: #FFFFFF; --star: #F59F00;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #17120F; --surface: #221B16; --surface-2: #2C231C; --text: #F5EDE6; --muted: #A8988B;
+      --border: #3A2F27; --primary: #FF7A3D; --primary-soft: #4A2614; --on-primary: #1A0F08; --star: #FFC233;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #17120F; --surface: #221B16; --surface-2: #2C231C; --text: #F5EDE6; --muted: #A8988B;
+    --border: #3A2F27; --primary: #FF7A3D; --primary-soft: #4A2614; --on-primary: #1A0F08; --star: #FFC233;
+  }
+  * { box-sizing: border-box; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: var(--primary); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+  h1, h2, h3 { font-family: Fraunces, Georgia, serif; line-height: 1.15; margin: 0 0 12px; }
+  h1 { font-size: clamp(40px, 7vw, 68px); letter-spacing: -1.5px; }
+  h2 { font-size: clamp(28px, 4.5vw, 40px); letter-spacing: -.5px; }
+  h3 { font-size: 20px; }
+  p { margin: 0 0 12px; }
+  .muted { color: var(--muted); }
+
+  nav { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(10px); background: color-mix(in srgb, var(--bg) 85%, transparent); border-bottom: 1px solid var(--border); }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: Fraunces, serif; font-weight: 800; font-size: 22px; text-decoration: none; color: var(--text); }
+  .brand img { width: 34px; height: 34px; border-radius: 9px; }
+  .links { display: flex; gap: 18px; align-items: center; }
+  .links a { color: var(--text); text-decoration: none; font-weight: 500; font-size: 15px; }
+  @media (max-width: 720px) { .links .hide-sm { display: none; } }
+  .theme-btn { background: var(--surface-2); border: 1px solid var(--border); color: var(--text); border-radius: 999px; width: 38px; height: 38px; cursor: pointer; font-size: 17px; }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 22px; border-radius: 14px; font-weight: 700; text-decoration: none; border: 0; cursor: pointer; font-size: 16px; }
+  .btn-primary { background: var(--primary); color: var(--on-primary); }
+  .btn-primary:hover { filter: brightness(1.07); }
+  .btn-ghost { background: var(--surface-2); color: var(--text); border: 1px solid var(--border); }
+
+  .hero { padding-top: 64px; padding-bottom: 40px; display: grid; grid-template-columns: 1.15fr .85fr; gap: 40px; align-items: center; }
+  @media (max-width: 860px) { .hero { grid-template-columns: 1fr; padding-top: 36px; } }
+  .tabbar { margin-top: auto; display: flex; justify-content: space-around; border-top: 1px solid var(--border); padding-top: 10px; font-size: 18px; }
+  .tabbar span { opacity: .45; } .tabbar span:first-child { opacity: 1; }
+  .eyebrow { display: inline-block; background: var(--primary-soft); color: var(--primary); font-weight: 700; font-size: 13px; padding: 6px 12px; border-radius: 999px; margin-bottom: 16px; }
+  .hero p.lead { font-size: 19px; color: var(--muted); max-width: 540px; }
+  .cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+
+  .phone { justify-self: center; width: min(300px, 100%); aspect-ratio: 9 / 18.5; border-radius: 40px; padding: 12px; background: #120d0a; box-shadow: 0 30px 60px -20px rgba(217,72,15,.35); }
+  .screen { height: 100%; border-radius: 30px; background: var(--bg); overflow: hidden; display: flex; flex-direction: column; gap: 10px; padding: 18px 14px; }
+  .screen .greet { font-weight: 700; font-size: 15px; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 8px; font-size: 11px; color: var(--muted); }
+  .stat b { display: block; color: var(--text); font-size: 17px; }
+  .mini { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+  .mini .img { height: 78px; display: grid; place-items: center; font-size: 34px; background: var(--primary-soft); }
+  .mini .body { padding: 8px 10px; font-size: 12px; }
+  .mini .body b { font-size: 13px; display: block; }
+  .stars { color: var(--star); letter-spacing: 1px; }
+
+  section { padding: 56px 0; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 22px; }
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .feature .ic { width: 44px; height: 44px; border-radius: 12px; background: var(--primary-soft); display: grid; place-items: center; font-size: 22px; margin-bottom: 12px; }
+  .feature p { color: var(--muted); font-size: 15px; margin: 0; }
+
+  .problem { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 760px) { .problem { grid-template-columns: 1fr; } }
+
+  .download { display: grid; grid-template-columns: 1fr auto; gap: 28px; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 26px; padding: 28px; }
+  @media (max-width: 760px) { .download { grid-template-columns: 1fr; } }
+  #qr { background: #fff; padding: 12px; border-radius: 16px; width: 204px; height: 204px; justify-self: center; }
+  #qr img, #qr canvas { width: 180px !important; height: 180px !important; }
+  ol.steps { counter-reset: s; list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+  ol.steps li { counter-increment: s; display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: start; }
+  ol.steps li::before { content: counter(s); width: 30px; height: 30px; border-radius: 50%; background: var(--primary); color: var(--on-primary); font-weight: 800; display: grid; place-items: center; font-size: 14px; }
+  .req { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  .pill { background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; padding: 5px 12px; font-size: 13px; }
+
+  details { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 4px 18px; margin-bottom: 10px; }
+  summary { cursor: pointer; font-weight: 700; padding: 14px 0; list-style: none; display: flex; justify-content: space-between; }
+  summary::after { content: '+'; color: var(--primary); font-size: 22px; line-height: 1; }
+  details[open] summary::after { content: '–'; }
+  details > div { padding-bottom: 14px; color: var(--muted); }
+  details ol, details ul { margin: 0; padding-left: 20px; }
+
+  .note { border-left: 4px solid var(--primary); background: var(--primary-soft); border-radius: 12px; padding: 14px 16px; margin-top: 16px; }
+  .tech { display: flex; flex-wrap: wrap; gap: 10px; }
+  footer { border-top: 1px solid var(--border); padding: 28px 0 40px; color: var(--muted); font-size: 14px; }
+  footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#"><img src="icon.png" alt="">Sazón</a>
+    <div class="links">
+      <a class="hide-sm" href="#funciones">Funciones</a>
+      <a class="hide-sm" href="#instalar">Instalar</a>
+      <a class="hide-sm" href="#uso">Cómo usarla</a>
+      <button class="theme-btn" id="themeBtn" aria-label="Cambiar tema">🌙</button>
+    </div>
+  </div>
+</nav>
+
+<header class="wrap hero">
+  <div>
+    <span class="eyebrow">App para Android · Gratis</span>
+    <h1>Tus recetas, con la sazón de la comunidad.</h1>
+    <p class="lead">Sazón es una app para crear, guardar y compartir recetas. Publicá las tuyas con fotos, descubrí las de otros, valoralas, comentá y seguí a quienes más te inspiran.</p>
+    <div class="cta">
+      <a class="btn btn-primary apk-link" href="#">⬇️ Descargar APK</a>
+      <a class="btn btn-ghost" href="#uso">Ver cómo funciona</a>
+    </div>
+  </div>
+  <div class="phone" aria-hidden="true">
+    <div class="screen">
+      <div class="greet">Buen día, Ana 👋<br><span class="muted" style="font-weight:400;font-size:12px">¿Qué cocinamos hoy?</span></div>
+      <div class="stats">
+        <div class="stat"><b>12</b>Mis recetas</div>
+        <div class="stat"><b>34</b>Favoritas</div>
+        <div class="stat"><b>58</b>Seguidores</div>
+      </div>
+      <div class="mini"><div class="img">🫓</div><div class="body"><b>Empanadas salteñas</b><span class="stars">★★★★★</span> 4.8 · 90 min</div></div>
+      <div class="mini"><div class="img">🍮</div><div class="body"><b>Flan casero</b><span class="stars">★★★★☆</span> 4.5 · 80 min</div></div>
+      <div class="tabbar"><span>🏠</span><span>🔎</span><span>🔔</span><span>👤</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="problema">
+  <div class="wrap">
+    <h2>¿Qué problema resuelve?</h2>
+    <div class="problem">
+      <div class="card">
+        <h3>😩 Antes</h3>
+        <p class="muted">Las recetas familiares terminan perdidas en cuadernos, capturas de pantalla, audios de WhatsApp y videos imposibles de volver a encontrar. Cuando querés cocinar algo, no sabés dónde estaba ni si alguien ya la probó.</p>
+      </div>
+      <div class="card">
+        <h3>😋 Con Sazón</h3>
+        <p class="muted">Todas tus recetas quedan ordenadas en un solo lugar, con ingredientes, pasos y fotos. Además podés ver qué cocina tu comunidad, qué recetas son las mejor valoradas y recibir avisos cuando alguien interactúa con lo que publicaste.</p>
+      </div>
+    </div>
+    <p class="muted" style="margin-top:16px"><b style="color:var(--text)">¿Para quién es?</b> Para cualquier persona que cocine en casa: estudiantes que se independizan, familias que quieren conservar sus recetas, aficionados que quieren compartir lo que preparan y cocineros que buscan ideas nuevas.</p>
+  </div>
+</section>
+
+<section id="funciones">
+  <div class="wrap">
+    <h2>Principales funcionalidades</h2>
+    <p class="muted">Todo lo que necesitás para cocinar y compartir.</p>
+    <div class="grid" style="margin-top:20px">
+      <div class="card feature"><div class="ic">📖</div><h3>Recetas completas</h3><p>Creá, editá y eliminá recetas con foto, ingredientes, pasos, tiempo, porciones, dificultad y categoría. Elegí si son públicas o privadas.</p></div>
+      <div class="card feature"><div class="ic">🔎</div><h3>Explorar y buscar</h3><p>Buscá por nombre, filtrá por categoría y ordená por las más recientes o las mejor valoradas.</p></div>
+      <div class="card feature"><div class="ic">⭐</div><h3>Valoraciones y comentarios</h3><p>Puntuá de 1 a 5 estrellas las recetas que probaste y dejá tus comentarios y consejos.</p></div>
+      <div class="card feature"><div class="ic">❤️</div><h3>Favoritas</h3><p>Guardá las recetas que más te gustan para tenerlas siempre a mano.</p></div>
+      <div class="card feature"><div class="ic">👥</div><h3>Seguir cocineros</h3><p>Seguí a otros usuarios y mirá sus nuevas recetas en tu inicio.</p></div>
+      <div class="card feature"><div class="ic">🔔</div><h3>Notificaciones push</h3><p>Enterate cuando comentan o valoran tus recetas, cuando alguien te sigue y recibí una “receta del día”.</p></div>
+      <div class="card feature"><div class="ic">📤</div><h3>Compartir</h3><p>Mandá cualquier receta completa por WhatsApp, mail o la app que quieras.</p></div>
+      <div class="card feature"><div class="ic">🌗</div><h3>Tema claro y oscuro</h3><p>Elegí claro, oscuro o el que use tu teléfono.</p></div>
+      <div class="card feature"><div class="ic">🛡️</div><h3>Cuentas y roles</h3><p>Ingreso con email o GitHub, recuperación de contraseña y roles de usuario, moderador y administrador.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="instalar">
+  <div class="wrap">
+    <h2>Descargar e instalar</h2>
+    <div class="download">
+      <div>
+        <ol class="steps">
+          <li><div><b>Descargá el APK</b> desde el botón o escaneando el código QR con la cámara del celular.</div></li>
+          <li><div><b>Abrí el archivo descargado.</b> Si Android lo pide, permití “Instalar apps desconocidas” para tu navegador o el gestor de archivos.</div></li>
+          <li><div><b>Tocá “Instalar”.</b> Si aparece un aviso de Play Protect, elegí “Instalar de todas formas” (la app no está en Play Store, por eso lo muestra).</div></li>
+          <li><div><b>Abrí Sazón</b> y creá tu cuenta. ¡Listo!</div></li>
+        </ol>
+        <div class="req">
+          <span class="pill">📱 Android 8.0 o superior</span>
+          <span class="pill">🌐 Conexión a internet</span>
+          <span class="pill">💾 ~60 MB libres</span>
+          <span class="pill">✉️ Un email (o cuenta de GitHub)</span>
+        </div>
+        <div class="cta"><a class="btn btn-primary apk-link" href="#">⬇️ Descargar Sazón.apk</a></div>
+      </div>
+      <div style="text-align:center">
+        <div id="qr" role="img" aria-label="Código QR para descargar el APK"></div>
+        <p class="muted" style="font-size:13px;margin-top:8px">Escaneá para descargar</p>
+      </div>
+    </div>
+    <p class="muted" style="margin-top:14px;font-size:14px">¿Tenés iPhone? Por ahora Sazón se distribuye sólo como APK para Android. La app está hecha con React Native/Expo, así que la versión para iOS se puede generar con el mismo código.</p>
+  </div>
+</section>
+
+<section id="uso">
+  <div class="wrap">
+    <h2>Cómo usar la app</h2>
+    <p class="muted">Una guía rápida para quien la abre por primera vez.</p>
+    <details open>
+      <summary>1. Crear una cuenta</summary>
+      <div><ol>
+        <li>En la pantalla de inicio tocá <b>Registrate</b>.</li>
+        <li>Completá nombre, nombre de usuario, email y una contraseña (mínimo 8 caracteres con letras y números).</li>
+        <li>Tocá <b>Crear cuenta</b>. También podés usar <b>Continuar con GitHub</b> sin crear contraseña.</li>
+      </ol></div>
+    </details>
+    <details>
+      <summary>2. Iniciar sesión y recuperar la contraseña</summary>
+      <div><ul>
+        <li>Ingresá tu email y contraseña. La sesión queda guardada: la próxima vez entrás directo.</li>
+        <li>¿La olvidaste? Tocá <b>¿Olvidaste tu contraseña?</b>, poné tu email y te llega un <b>código de 6 dígitos</b>. Escribilo junto con la contraseña nueva.</li>
+      </ul></div>
+    </details>
+    <details>
+      <summary>3. Publicar una receta</summary>
+      <div><ol>
+        <li>En <b>Inicio</b> tocá <b>Nueva receta</b>.</li>
+        <li>Agregá una foto, título, categoría, tiempo, porciones y dificultad.</li>
+        <li>Cargá los ingredientes y los pasos (podés sumar o quitar renglones).</li>
+        <li>Elegí si es pública o privada y tocá <b>Publicar receta</b>. Después podés editarla o eliminarla desde la propia receta.</li>
+      </ol></div>
+    </details>
+    <details>
+      <summary>4. Explorar, valorar, comentar y compartir</summary>
+      <div><ul>
+        <li>En <b>Explorar</b> buscá por nombre o filtrá por categoría.</li>
+        <li>Dentro de una receta: marcá ingredientes mientras cocinás, dejá tus estrellas, comentá y tocá ❤️ para guardarla.</li>
+        <li>Con el botón de compartir la mandás completa por WhatsApp u otra app.</li>
+        <li>Tocá el nombre de un autor para ver su perfil y <b>Seguirlo</b>.</li>
+      </ul></div>
+    </details>
+    <details>
+      <summary>5. Notificaciones y configuración</summary>
+      <div><ul>
+        <li>Aceptá el permiso de notificaciones para recibir avisos en el celular. En la pestaña <b>Avisos</b> ves el historial.</li>
+        <li>En <b>Perfil → Configuración</b> podés editar tus datos y foto, cambiar la contraseña, elegir el tema claro/oscuro, decidir qué notificaciones recibir y cerrar sesión.</li>
+      </ul></div>
+    </details>
+    <details>
+      <summary>6. Usuarios de prueba y roles</summary>
+      <div>
+        <p>La app tiene tres roles:</p>
+        <ul>
+          <li><b>Usuario:</b> crea y gestiona sus recetas, comenta, valora y sigue.</li>
+          <li><b>Moderador:</b> además puede eliminar comentarios y recetas que no respeten las normas.</li>
+          <li><b>Administrador:</b> además gestiona categorías y asigna roles a otros usuarios.</li>
+        </ul>
+        <p>Para una prueba completa, cualquiera puede crear una cuenta (rol usuario). Las credenciales de las cuentas de administrador y moderador se entregan <b>en privado al docente</b> y no se publican acá.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section id="tecnologia">
+  <div class="wrap">
+    <h2>Cómo está hecha</h2>
+    <div class="tech">
+      <span class="pill">React Native + Expo (Android, iOS y web)</span>
+      <span class="pill">Expo Router</span>
+      <span class="pill">Supabase (PostgreSQL, Auth, Storage, Realtime)</span>
+      <span class="pill">Row Level Security</span>
+      <span class="pill">JWT + login con GitHub (OAuth PKCE)</span>
+      <span class="pill">Expo Push Notifications</span>
+      <span class="pill">pg_cron + pg_net</span>
+      <span class="pill">EAS Build (APK)</span>
+    </div>
+    <p class="muted" style="margin-top:16px">Código fuente: <a class="repo-link" href="#">repositorio en GitHub</a></p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Sazón · Proyecto Final de Construcción de Software — 6.º año · <span class="author"></span></span>
+    <span><a class="repo-link" href="#">Código</a> · <a class="apk-link" href="#">Descargar</a></span>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.apk-link').forEach(a => { a.href = CONFIG.apkUrl; });
+  document.querySelectorAll('.repo-link').forEach(a => { a.href = CONFIG.repoUrl; });
+  document.querySelectorAll('.author').forEach(e => { e.textContent = CONFIG.author; });
+  try { new QRCode(document.getElementById('qr'), { text: CONFIG.apkUrl, width: 180, height: 180, colorDark: '#2A1E17', colorLight: '#ffffff' }); }
+  catch (e) { document.getElementById('qr').textContent = 'QR no disponible'; }
+
+  const root = document.documentElement, btn = document.getElementById('themeBtn');
+  const current = () => root.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  const paint = () => { btn.textContent = current() === 'dark' ? '☀️' : '🌙'; };
+  try { const saved = localStorage.getItem('sazon-theme'); if (saved) root.dataset.theme = saved; } catch (e) {}
+  paint();
+  btn.addEventListener('click', () => {
+    root.dataset.theme = current() === 'dark' ? 'light' : 'dark';
+    try { localStorage.setItem('sazon-theme', root.dataset.theme); } catch (e) {}
+    paint();
+  });
+</script>
+</body>
+</html>

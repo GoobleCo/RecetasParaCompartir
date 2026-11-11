@@ -1,0 +1,67 @@
+{
+  "expo": {
+    "name": "Sazón",
+    "slug": "sazon-recetas",
+    "version": "1.0.0",
+    "scheme": "sazon",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sazon.recetas"
+    },
+    "android": {
+      "package": "com.sazon.recetas",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#D9480F"
+      },
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-web-browser",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#FFF8F1",
+          "dark": {
+            "backgroundColor": "#17120F"
+          }
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#D9480F"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Sazón necesita acceso a tus fotos para agregar imágenes a tus recetas y a tu perfil."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": false
+    },
+    "extra": {
+      "eas": {
+        "projectId": "PEGAR-ACA-EL-PROJECT-ID-DE-EXPO"
+      }
+    }
+  }
+}

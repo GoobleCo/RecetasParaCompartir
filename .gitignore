@@ -1,0 +1,12 @@
+# Datos privados: nunca al repositorio
+CREDENCIALES_DOCENTE.md
+.env
+.env.*
+!.env.example
+*firebase-adminsdk*.json
+service-account*.json
+*.apk
+*.aab
+*.jks
+node_modules/
+.DS_Store
