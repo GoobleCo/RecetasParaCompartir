@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Loading } from '../components/ui';
 import { useAuth } from '../lib/auth';
 
-/** Destino del deep link sazon://auth-callback al volver del login social */
+/** Destino del deep link codigoomega://auth-callback al volver del login social */
 export default function AuthCallback() {
   const { session } = useAuth();
   const [timedOut, setTimedOut] = useState(false);

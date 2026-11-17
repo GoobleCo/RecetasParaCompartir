@@ -46,10 +46,10 @@ export default function Login() {
       <ScrollView contentContainerStyle={{ padding: 24, paddingTop: insets.top + 40, gap: 16 }} keyboardShouldPersistTaps="handled">
         <View style={{ alignItems: 'center', gap: 8, marginBottom: 12 }}>
           <View style={{ width: 84, height: 84, borderRadius: 24, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center' }}>
-            <Ionicons name="restaurant" size={42} color={colors.onPrimary} />
+            <Ionicons name="radio" size={42} color={colors.onPrimary} />
           </View>
-          <T variant="title">Sazón</T>
-          <T muted style={{ textAlign: 'center' }}>Cociná, compartí y descubrí recetas de la comunidad</T>
+          <T variant="title">Código Ω</T>
+          <T muted style={{ textAlign: 'center' }}>Ingresá los códigos antes de que se cierre la transmisión</T>
         </View>
 
         <Field label="Email" value={email} onChangeText={setEmail} error={errors.email}

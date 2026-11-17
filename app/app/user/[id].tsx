@@ -2,9 +2,9 @@ import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert, RefreshControl, ScrollView } from 'react-native';
 import { ProfileHeader } from '../../components/ProfileHeader';
-import { RecipeCard } from '../../components/RecipeCard';
+import { ChallengeCard } from '../../components/ChallengeCard';
 import { Button, Empty, ErrorView, Loading, SectionHeader, styles } from '../../components/ui';
-import { followCounts, getProfile, isFollowing, listRecipes, setFollowing } from '../../lib/api';
+import { followCounts, getProfile, isFollowing, listChallenges, setFollowing, userBest } from '../../lib/api';
 import { useAuth } from '../../lib/auth';
 import { friendlyError } from '../../lib/errors';
 import { useTheme } from '../../lib/theme';
@@ -19,10 +19,11 @@ export default function UserProfile() {
   const isMe = me?.id === id;
 
   const { data, setData, error, loading, refreshing, refresh, retry } = useLoader(async () => {
-    const [profile, recipes, counts, following] = await Promise.all([
-      getProfile(id), listRecipes({ authorId: id, limit: 100 }), followCounts(id), isMe ? Promise.resolve(false) : isFollowing(id),
+    const [profile, challenges, counts, following, best] = await Promise.all([
+      getProfile(id), listChallenges({ authorId: id, limit: 100 }), followCounts(id),
+      isMe ? Promise.resolve(false) : isFollowing(id), userBest(id),
     ]);
-    return { profile, recipes, counts, following };
+    return { profile, challenges, counts, following, best };
   }, [id, isMe]);
 
   useEffect(() => {
@@ -56,17 +57,17 @@ export default function UserProfile() {
       contentContainerStyle={styles.screen}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor={colors.primary} />}
     >
-      <ProfileHeader profile={data.profile} recipes={data.recipes.length} followers={data.counts.followers} following={data.counts.following} />
+      <ProfileHeader profile={data.profile} best={data.best} followers={data.counts.followers} following={data.counts.following} />
       {isMe ? (
         <Button variant="secondary" icon="create-outline" title="Editar mi perfil" onPress={() => router.push('/settings/profile')} />
       ) : (
         <Button variant={data.following ? 'secondary' : 'primary'} icon={data.following ? 'checkmark' : 'person-add'}
           title={data.following ? 'Siguiendo' : 'Seguir'} loading={busy} onPress={toggle} />
       )}
-      <SectionHeader title="Recetas" />
-      {data.recipes.length === 0
-        ? <Empty title="Sin recetas públicas" subtitle="Este usuario todavía no compartió recetas." />
-        : data.recipes.map((r) => <RecipeCard key={r.id} recipe={r} />)}
+      <SectionHeader title="Desafíos creados" />
+      {data.challenges.length === 0
+        ? <Empty icon="flag-outline" title="Sin desafíos públicos" subtitle="Este usuario todavía no creó desafíos." />
+        : data.challenges.map((c) => <ChallengeCard key={c.id} challenge={c} />)}
     </ScrollView>
   );
 }

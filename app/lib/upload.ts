@@ -3,8 +3,8 @@ import * as ImagePicker from 'expo-image-picker';
 import { AppError } from './errors';
 import { supabase } from './supabase';
 
-export type Bucket = 'recipe-images' | 'avatars';
-const MAX_BYTES: Record<Bucket, number> = { 'recipe-images': 5 * 1024 * 1024, avatars: 2 * 1024 * 1024 };
+export type Bucket = 'avatars';
+const MAX_BYTES: Record<Bucket, number> = { avatars: 2 * 1024 * 1024 };
 
 /** Abre la galería. Devuelve null si el usuario cancela. */
 export async function pickImage(aspect: [number, number]): Promise<ImagePicker.ImagePickerAsset | null> {

@@ -1,22 +1,22 @@
 {
   "expo": {
-    "name": "Sazón",
-    "slug": "sazon-recetas",
+    "name": "Código Ω",
+    "slug": "codigo-omega",
     "version": "1.0.0",
-    "scheme": "sazon",
+    "scheme": "codigoomega",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.sazon.recetas"
+      "bundleIdentifier": "com.codigoomega.app"
     },
     "android": {
-      "package": "com.sazon.recetas",
+      "package": "com.codigoomega.app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#D9480F"
+        "backgroundColor": "#0A0F14"
       },
       "edgeToEdgeEnabled": true
     },
@@ -35,9 +35,9 @@
           "image": "./assets/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#FFF8F1",
+          "backgroundColor": "#F3F6F9",
           "dark": {
-            "backgroundColor": "#17120F"
+            "backgroundColor": "#0A0F14"
           }
         }
       ],
@@ -45,13 +45,13 @@
         "expo-notifications",
         {
           "icon": "./assets/notification-icon.png",
-          "color": "#D9480F"
+          "color": "#22D3EE"
         }
       ],
       [
         "expo-image-picker",
         {
-          "photosPermission": "Sazón necesita acceso a tus fotos para agregar imágenes a tus recetas y a tu perfil."
+          "photosPermission": "Código Ω necesita acceso a tus fotos para tu foto de perfil."
         }
       ]
     ],

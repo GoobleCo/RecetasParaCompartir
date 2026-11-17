@@ -1,21 +1,23 @@
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, RefreshControl, ScrollView, TextInput, View } from 'react-native';
+import { Alert, Pressable, RefreshControl, ScrollView, TextInput, View } from 'react-native';
+import { ArrowKey, CodeView } from '../../components/Arrows';
 import { Avatar, Badge, Button, Card, Chip, Empty, ErrorView, Field, IconButton, Loading, styles, T } from '../../components/ui';
 import {
-  Category, createCategory, deleteCategory, deleteComment, getCategories, listUsers, recentComments,
-  Role, ROLE_LABEL, setUserRole, updateCategory,
+  createProtocol, deleteComment, deleteProtocol, getProtocols, listUsers, ProtocolRow, recentComments,
+  Role, ROLE_LABEL, setUserRole, updateProtocol,
 } from '../../lib/api';
+import { CATEGORY_COLOR, CATEGORY_LABEL, Dir, DIRS, ProtocolCategory } from '../../lib/game';
 import { useAuth } from '../../lib/auth';
 import { friendlyError } from '../../lib/errors';
 import { useTheme } from '../../lib/theme';
 import { useLoader } from '../../lib/useLoader';
 
-type Tab = 'users' | 'categories' | 'moderation';
+type Tab = 'users' | 'protocols' | 'moderation';
 
 /**
  * Panel de administración.
- *  - Administrador: usuarios/roles, categorías (ABM) y moderación.
+ *  - Administrador: usuarios/roles, catálogo de protocolos (ABM) y moderación.
  *  - Moderador: sólo moderación de comentarios.
  * Ocultar pestañas es sólo visual: cada operación vuelve a validarse en el backend.
  */
@@ -30,11 +32,11 @@ export default function Admin() {
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
       <View style={{ flexDirection: 'row', gap: 8, padding: 16, paddingBottom: 4 }}>
         {isAdmin && <Chip label="Usuarios" icon="people-outline" active={tab === 'users'} onPress={() => setTab('users')} />}
-        {isAdmin && <Chip label="Categorías" icon="pricetags-outline" active={tab === 'categories'} onPress={() => setTab('categories')} />}
+        {isAdmin && <Chip label="Protocolos" icon="grid-outline" active={tab === 'protocols'} onPress={() => setTab('protocols')} />}
         <Chip label="Moderación" icon="shield-outline" active={tab === 'moderation'} onPress={() => setTab('moderation')} />
       </View>
       {tab === 'users' && <Users />}
-      {tab === 'categories' && <Categories />}
+      {tab === 'protocols' && <Protocols />}
       {tab === 'moderation' && <Moderation />}
     </View>
   );
@@ -90,36 +92,47 @@ function Users() {
   );
 }
 
-function Categories() {
+const EMPTY = { name: '', icon: '', code: '', category: 'ofensivo' as ProtocolCategory, active: true };
+
+function Protocols() {
   const { colors } = useTheme();
-  const { data, error, loading, refreshing, refresh, retry } = useLoader(getCategories, []);
-  const [editing, setEditing] = useState<Category | null>(null);
-  const [name, setName] = useState('');
-  const [emoji, setEmoji] = useState('');
-  const [nameError, setNameError] = useState<string | null>(null);
+  const { data, error, loading, refreshing, refresh, retry } = useLoader(() => getProtocols(true), []);
+  const [editing, setEditing] = useState<ProtocolRow | null>(null);
+  const [form, setForm] = useState(EMPTY);
+  const [errors, setErrors] = useState<Record<string, string | null>>({});
   const [saving, setSaving] = useState(false);
 
-  const reset = () => { setEditing(null); setName(''); setEmoji(''); setNameError(null); };
+  const reset = () => { setEditing(null); setForm(EMPTY); setErrors({}); };
+  const edit = (p: ProtocolRow) => {
+    setEditing(p);
+    setForm({ name: p.name, icon: p.icon ?? '', code: p.code, category: p.category, active: p.active });
+    setErrors({});
+  };
 
   const save = async () => {
-    const n = name.trim();
-    if (n.length < 2 || n.length > 40) return setNameError('Entre 2 y 40 caracteres.');
+    const n = form.name.trim();
+    const e = {
+      name: n.length < 2 || n.length > 40 ? 'Entre 2 y 40 caracteres.' : null,
+      code: form.code.length < 3 || form.code.length > 8 ? 'El código debe tener entre 3 y 8 flechas.' : null,
+    };
+    setErrors(e);
+    if (e.name || e.code) return;
     setSaving(true);
     try {
-      if (editing) await updateCategory(editing.id, n, emoji);
-      else await createCategory(n, emoji);
+      if (editing) await updateProtocol(editing.id, form);
+      else await createProtocol(form);
       reset();
       refresh();
-    } catch (e) {
-      Alert.alert('No se pudo guardar', friendlyError(e));
+    } catch (err) {
+      Alert.alert('No se pudo guardar', friendlyError(err));
     } finally { setSaving(false); }
   };
 
-  const remove = (c: Category) =>
-    Alert.alert('Eliminar categoría', `¿Eliminar "${c.name}"? Las recetas quedarán sin categoría.`, [
+  const remove = (p: ProtocolRow) =>
+    Alert.alert('Eliminar protocolo', `¿Eliminar "${p.name}"? Se quita también de los desafíos que lo usan.`, [
       { text: 'Cancelar', style: 'cancel' },
       { text: 'Eliminar', style: 'destructive', onPress: async () => {
-        try { await deleteCategory(c.id); refresh(); } catch (e) { Alert.alert('Error', friendlyError(e)); }
+        try { await deleteProtocol(p.id); refresh(); } catch (err) { Alert.alert('No se pudo eliminar', friendlyError(err)); }
       } },
     ]);
 
@@ -127,22 +140,56 @@ function Categories() {
     <ScrollView contentContainerStyle={styles.screen} keyboardShouldPersistTaps="handled"
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor={colors.primary} />}>
       <Card style={{ gap: 10 }}>
-        <T variant="h3">{editing ? `Editar "${editing.name}"` : 'Nueva categoría'}</T>
+        <T variant="h3">{editing ? `Editar "${editing.name}"` : 'Nuevo protocolo'}</T>
         <View style={{ flexDirection: 'row', gap: 8 }}>
-          <Field style={{ width: 80 }} label="Emoji" value={emoji} onChangeText={setEmoji} maxLength={4} placeholder="🍕" />
-          <Field style={{ flex: 1 }} label="Nombre" value={name} onChangeText={setName} error={nameError} maxLength={40} placeholder="Pizzas" />
+          <Field style={{ width: 80 }} label="Ícono" value={form.icon} onChangeText={(icon) => setForm({ ...form, icon })} maxLength={4} placeholder="🛰️" />
+          <Field style={{ flex: 1 }} label="Nombre" value={form.name} onChangeText={(name) => setForm({ ...form, name })}
+            error={errors.name} maxLength={40} placeholder="Escudo iónico" />
+        </View>
+        <T variant="label">Categoría</T>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+          {(Object.keys(CATEGORY_LABEL) as ProtocolCategory[]).map((c) => (
+            <Chip key={c} label={CATEGORY_LABEL[c]} active={form.category === c} onPress={() => setForm({ ...form, category: c })} />
+          ))}
+        </View>
+        <T variant="label">Código ({form.code.length}/8)</T>
+        <View style={{ minHeight: 44, justifyContent: 'center' }}>
+          {form.code ? <CodeView code={form.code} size={18} gap={4} /> : <T muted>Tocá las flechas para armar el código</T>}
+        </View>
+        <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+          {DIRS.map((d) => (
+            <Pressable key={d} accessibilityLabel={`Agregar flecha ${d}`} onPress={() => form.code.length < 8 && setForm({ ...form, code: form.code + d })}
+              style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}>
+              <ArrowKey dir={d} state="next" size={22} />
+            </Pressable>
+          ))}
+          <Button small variant="ghost" title="Borrar" icon="backspace-outline" onPress={() => setForm({ ...form, code: form.code.slice(0, -1) })} />
+        </View>
+        {errors.code && <T variant="small" style={{ color: colors.danger }}>{errors.code}</T>}
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <Chip label={form.active ? 'Activo' : 'Inactivo'} icon={form.active ? 'eye-outline' : 'eye-off-outline'} active={form.active}
+            onPress={() => setForm({ ...form, active: !form.active })} />
+          <T variant="small" muted style={{ flex: 1 }}>Los inactivos no aparecen en el modo clásico ni en el diario.</T>
         </View>
         <View style={{ flexDirection: 'row', gap: 8 }}>
           <Button style={{ flex: 1 }} small title={editing ? 'Guardar' : 'Agregar'} icon="checkmark" onPress={save} loading={saving} />
           {editing && <Button small variant="secondary" title="Cancelar" onPress={reset} />}
         </View>
       </Card>
-      {loading ? <Loading /> : error ? <ErrorView message={error} onRetry={retry} /> : (data ?? []).map((c) => (
-        <Card key={c.id} style={styles.row}>
-          <T style={{ fontSize: 22 }}>{c.emoji ?? '•'}</T>
-          <T variant="h3" style={{ flex: 1 }}>{c.name}</T>
-          <IconButton label="Editar" icon="create-outline" onPress={() => { setEditing(c); setName(c.name); setEmoji(c.emoji ?? ''); }} />
-          <IconButton label="Eliminar" icon="trash-outline" color={colors.danger} onPress={() => remove(c)} />
+      {loading ? <Loading /> : error ? <ErrorView message={error} onRetry={retry} /> : (data ?? []).map((p) => (
+        <Card key={p.id} style={{ gap: 6, borderLeftWidth: 4, borderLeftColor: CATEGORY_COLOR[p.category], opacity: p.active ? 1 : 0.6 }}>
+          <View style={styles.row}>
+            <T style={{ fontSize: 22 }}>{p.icon ?? '•'}</T>
+            <View style={{ flex: 1 }}>
+              <T variant="h3">{p.name}</T>
+              <T variant="small" muted>{CATEGORY_LABEL[p.category]}{p.active ? '' : ' · inactivo'}</T>
+            </View>
+            <IconButton label="Editar" icon="create-outline" onPress={() => edit(p)} />
+            <IconButton label="Eliminar" icon="trash-outline" color={colors.danger} onPress={() => remove(p)} />
+          </View>
+          <View style={{ flexDirection: 'row', gap: 4 }}>
+            {p.code.split('').map((c, i) => <ArrowKey key={i} dir={c as Dir} size={14} />)}
+          </View>
         </Card>
       ))}
     </ScrollView>
@@ -179,13 +226,8 @@ function Moderation() {
             <IconButton label="Eliminar" icon="trash-outline" color={colors.danger} onPress={() => remove(c.id)} />
           </View>
           <T>{c.body}</T>
-          {c.recipe && (
-            <T variant="small" style={{ color: colors.primary }} >
-              <T variant="small" muted>en </T>
-              <T variant="small" style={{ color: colors.primary, fontWeight: '700' }}>{c.recipe.title}</T>
-            </T>
-          )}
-          {c.recipe && <Button small variant="ghost" title="Ver receta" onPress={() => router.push(`/recipe/${c.recipe!.id}`)} />}
+          {c.challenge && <T variant="small" muted>en «{c.challenge.title}»</T>}
+          {c.challenge && <Button small variant="ghost" title="Ver desafío" onPress={() => router.push(`/challenge/${c.challenge!.id}`)} />}
         </Card>
       ))}
     </ScrollView>

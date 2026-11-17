@@ -1,16 +1,17 @@
 {
-  "name": "sazon",
+  "name": "codigo-omega",
   "version": "1.0.0",
   "private": true,
   "main": "expo-router/entry",
   "scripts": {
-    "setup": "expo install expo-router expo-constants expo-crypto expo-device expo-image-picker expo-linking expo-notifications expo-secure-store expo-splash-screen expo-status-bar expo-system-ui expo-web-browser react react-dom react-native react-native-web react-native-safe-area-context react-native-screens @react-native-async-storage/async-storage @react-native-community/netinfo @expo/vector-icons && expo install --dev typescript @types/react && expo install --fix",
+    "setup": "expo install expo-router expo-constants expo-haptics expo-device expo-image-picker expo-linking expo-notifications expo-secure-store expo-splash-screen expo-status-bar expo-system-ui expo-web-browser react react-dom react-native react-native-web react-native-safe-area-context react-native-screens @react-native-async-storage/async-storage @react-native-community/netinfo @expo/vector-icons && expo install --dev typescript @types/react && expo install --fix",
     "start": "expo start",
     "android": "expo start --android",
     "web": "expo start --web",
     "typecheck": "tsc --noEmit",
     "doctor": "npx expo-doctor",
-    "build:apk": "eas build -p android --profile preview"
+    "build:apk": "eas build -p android --profile preview",
+    "test": "node --experimental-strip-types --test tests/game.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.58.0",

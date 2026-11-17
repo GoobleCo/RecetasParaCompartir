@@ -74,7 +74,7 @@ export default function EditProfile() {
         <Field label="Nombre de usuario" value={username} error={errors.username} autoCapitalize="none"
           onChangeText={(t) => setUsername(t.toLowerCase().replace(/\s/g, ''))} maxLength={20} />
         <Field label="Biografía" value={bio} onChangeText={setBio} error={errors.bio} multiline maxLength={280}
-          placeholder="Contá algo sobre vos y tu cocina" hint={`${bio.length}/280`} />
+          placeholder="Contá algo sobre vos y tu estilo de juego" hint={`${bio.length}/280`} />
         <Button title="Guardar" icon="checkmark" onPress={save} loading={saving} />
       </ScrollView>
     </KeyboardAvoidingView>

@@ -40,12 +40,14 @@ function RootNavigator() {
     if (profile?.id) registerForPush();
   }, [profile?.id]);
 
-  // Push: al tocar una notificación, abrir la receta / el perfil correspondiente
+  // Push: al tocar una notificación, abrir el desafío, el ranking o el perfil correspondiente
   useEffect(() => {
     const open = (data: Record<string, unknown> | undefined) => {
       refreshUnread();
       if (!data) return;
-      if (typeof data.recipeId === 'string') router.push(`/recipe/${data.recipeId}`);
+      if (typeof data.challengeId === 'string') router.push(`/challenge/${data.challengeId}`);
+      else if (data.type === 'daily') router.push({ pathname: '/game', params: { mode: 'daily' } });
+      else if (data.type === 'beaten' || data.type === 'weekly') router.push('/(tabs)/ranking');
       else if (data.type === 'follow' && typeof data.actorId === 'string') router.push(`/user/${data.actorId}`);
       else router.push('/(tabs)/notifications');
     };
@@ -87,11 +89,13 @@ function RootNavigator() {
         {/* Protección de rutas: sin sesión sólo se puede ver login/registro */}
         <Stack.Protected guard={!!session && !holdRedirect}>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="recipe/[id]" options={{ title: 'Receta' }} />
-          <Stack.Screen name="recipe/new" options={{ title: 'Nueva receta' }} />
-          <Stack.Screen name="recipe/edit/[id]" options={{ title: 'Editar receta' }} />
+          <Stack.Screen name="game" options={{ headerShown: false, gestureEnabled: false }} />
+          <Stack.Screen name="codex" options={{ title: 'Códice de protocolos' }} />
+          <Stack.Screen name="challenge/[id]" options={{ title: 'Desafío' }} />
+          <Stack.Screen name="challenge/new" options={{ title: 'Nuevo desafío' }} />
+          <Stack.Screen name="challenge/edit/[id]" options={{ title: 'Editar desafío' }} />
           <Stack.Screen name="user/[id]" options={{ title: 'Perfil' }} />
-          <Stack.Screen name="favorites" options={{ title: 'Mis favoritas' }} />
+          <Stack.Screen name="favorites" options={{ title: 'Mis favoritos' }} />
           <Stack.Screen name="settings/index" options={{ title: 'Configuración' }} />
           <Stack.Screen name="settings/profile" options={{ title: 'Editar perfil' }} />
           <Stack.Screen name="settings/password" options={{ title: 'Cambiar contraseña' }} />

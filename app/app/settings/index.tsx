@@ -9,13 +9,14 @@ import { friendlyError } from '../../lib/errors';
 import { registerForPush, sendTestNotification } from '../../lib/notifications';
 import { ThemeMode, useTheme } from '../../lib/theme';
 
-type NotifKey = 'notify_comments' | 'notify_ratings' | 'notify_follows' | 'notify_new_recipes' | 'notify_daily';
+type NotifKey = 'notify_beaten' | 'notify_comments' | 'notify_ratings' | 'notify_follows' | 'notify_new_challenges' | 'notify_daily';
 const NOTIF_OPTIONS: { key: NotifKey; label: string; hint: string }[] = [
-  { key: 'notify_comments', label: 'Comentarios', hint: 'Cuando comentan tus recetas' },
-  { key: 'notify_ratings', label: 'Valoraciones', hint: 'Cuando valoran tus recetas' },
+  { key: 'notify_beaten', label: 'Te superaron', hint: 'Cuando alguien te saca el primer puesto' },
+  { key: 'notify_daily', label: 'Desafío diario', hint: 'Aviso a las 11 h si todavía no jugaste' },
+  { key: 'notify_comments', label: 'Comentarios', hint: 'Cuando comentan tus desafíos' },
+  { key: 'notify_ratings', label: 'Valoraciones', hint: 'Cuando valoran tus desafíos' },
   { key: 'notify_follows', label: 'Seguidores', hint: 'Cuando alguien te sigue' },
-  { key: 'notify_new_recipes', label: 'Recetas nuevas', hint: 'Cuando publica alguien que seguís' },
-  { key: 'notify_daily', label: 'Receta del día', hint: 'Una sugerencia diaria a las 11 h' },
+  { key: 'notify_new_challenges', label: 'Desafíos nuevos', hint: 'Cuando publica alguien que seguís' },
 ];
 
 export default function Settings() {
@@ -41,7 +42,7 @@ export default function Settings() {
   const testPush = async () => {
     const status = await registerForPush();
     await sendTestNotification().catch(() => {});
-    if (status === 'denied') Alert.alert('Permiso denegado', 'Activá las notificaciones de Sazón en la configuración del teléfono.');
+    if (status === 'denied') Alert.alert('Permiso denegado', 'Activá las notificaciones de Código Ω en la configuración del teléfono.');
   };
 
   const logout = () =>
@@ -51,7 +52,7 @@ export default function Settings() {
     ]);
 
   const removeAccount = () =>
-    Alert.alert('Eliminar cuenta', 'Se borrarán tu perfil, tus recetas, comentarios y valoraciones. No se puede deshacer.', [
+    Alert.alert('Eliminar cuenta', 'Se borrarán tu perfil, tus desafíos, partidas, comentarios y valoraciones. No se puede deshacer.', [
       { text: 'Cancelar', style: 'cancel' },
       { text: 'Eliminar definitivamente', style: 'destructive', onPress: async () => {
         try {
@@ -108,7 +109,7 @@ export default function Settings() {
       <SectionHeader title="Sesión" />
       <Button variant="danger" icon="log-out-outline" title="Cerrar sesión" loading={signingOut} onPress={logout} />
       <Button variant="ghost" title="Eliminar mi cuenta" onPress={removeAccount} />
-      <T variant="small" muted style={{ textAlign: 'center' }}>Sazón v{Constants.expoConfig?.version ?? '1.0.0'}</T>
+      <T variant="small" muted style={{ textAlign: 'center' }}>Código Ω v{Constants.expoConfig?.version ?? '1.0.0'}</T>
     </ScrollView>
   );
 }

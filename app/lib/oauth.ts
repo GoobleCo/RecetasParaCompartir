@@ -18,7 +18,7 @@ export const PROVIDER_LABEL: Record<OAuthProvider, string> = { github: 'GitHub',
  * Social Login con flujo OAuth + PKCE:
  * 1. Supabase nos da la URL del proveedor.
  * 2. Se abre el navegador del sistema para que el usuario autorice.
- * 3. El proveedor vuelve a sazon://auth-callback?code=...
+ * 3. El proveedor vuelve a codigoomega://auth-callback?code=...
  * 4. Cambiamos ese código por una sesión (JWT) de Supabase.
  * Devuelve false si el usuario cancela.
  */

@@ -1,5 +1,5 @@
 import { FlatList, RefreshControl } from 'react-native';
-import { RecipeCard } from '../components/RecipeCard';
+import { ChallengeCard } from '../components/ChallengeCard';
 import { Empty, ErrorView, Loading } from '../components/ui';
 import { getFavorites } from '../lib/api';
 import { useTheme } from '../lib/theme';
@@ -14,11 +14,11 @@ export default function Favorites() {
     <FlatList
       style={{ backgroundColor: colors.bg }}
       data={data ?? []}
-      keyExtractor={(r) => r.id}
-      contentContainerStyle={{ padding: 16, gap: 14 }}
-      renderItem={({ item }) => <RecipeCard recipe={item} />}
+      keyExtractor={(c) => c.id}
+      contentContainerStyle={{ padding: 16, gap: 12 }}
+      renderItem={({ item }) => <ChallengeCard challenge={item} />}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor={colors.primary} />}
-      ListEmptyComponent={<Empty icon="heart-outline" title="No tenés favoritas" subtitle="Tocá el corazón en una receta para guardarla acá." />}
+      ListEmptyComponent={<Empty icon="heart-outline" title="No tenés favoritos" subtitle="Tocá el corazón en un desafío para guardarlo acá." />}
     />
   );
 }

@@ -5,36 +5,38 @@ import { useColorScheme } from 'react-native';
 export type ThemeMode = 'system' | 'light' | 'dark';
 
 const light = {
-  bg: '#FFF8F1',
+  bg: '#F3F6F9',
   card: '#FFFFFF',
-  cardAlt: '#FBEFE4',
-  text: '#2A1E17',
-  muted: '#7A6A5F',
-  border: '#EADBCB',
-  primary: '#D9480F',
-  primarySoft: '#FDE3D3',
+  cardAlt: '#E8EEF4',
+  text: '#0E1A26',
+  muted: '#5B6B7B',
+  border: '#D5DEE7',
+  primary: '#0891B2',
+  primarySoft: '#CFF3FA',
   onPrimary: '#FFFFFF',
-  danger: '#C92A2A',
+  danger: '#DC2626',
   dangerSoft: '#FDE2E2',
-  success: '#2B8A3E',
-  star: '#F59F00',
+  success: '#16A34A',
+  successSoft: '#DCFCE7',
+  star: '#F59E0B',
   overlay: 'rgba(0,0,0,0.35)',
 };
 
 const dark: typeof light = {
-  bg: '#17120F',
-  card: '#221B16',
-  cardAlt: '#2C231C',
-  text: '#F5EDE6',
-  muted: '#A8988B',
-  border: '#3A2F27',
-  primary: '#FF7A3D',
-  primarySoft: '#4A2614',
-  onPrimary: '#1A0F08',
-  danger: '#FF6B6B',
-  dangerSoft: '#4A1C1C',
-  success: '#69DB7C',
-  star: '#FFC233',
+  bg: '#0A0F14',
+  card: '#121A22',
+  cardAlt: '#1A2530',
+  text: '#E6EEF5',
+  muted: '#8A9AAA',
+  border: '#243240',
+  primary: '#22D3EE',
+  primarySoft: '#0E3A46',
+  onPrimary: '#04141A',
+  danger: '#F87171',
+  dangerSoft: '#3B1717',
+  success: '#4ADE80',
+  successSoft: '#123222',
+  star: '#FBBF24',
   overlay: 'rgba(0,0,0,0.6)',
 };
 
@@ -42,7 +44,7 @@ export type Colors = typeof light;
 
 type ThemeCtx = { colors: Colors; isDark: boolean; mode: ThemeMode; setMode: (m: ThemeMode) => void };
 const Ctx = createContext<ThemeCtx>({ colors: light, isDark: false, mode: 'system', setMode: () => {} });
-const KEY = 'sazon.theme';
+const KEY = 'omega.theme';
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const system = useColorScheme();

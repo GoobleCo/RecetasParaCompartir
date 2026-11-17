@@ -78,7 +78,7 @@ export async function sendTestNotification(): Promise<void> {
   const perm = await Notifications.getPermissionsAsync();
   if (!perm.granted) await Notifications.requestPermissionsAsync();
   await Notifications.scheduleNotificationAsync({
-    content: { title: 'Sazón 🍳', body: '¡Las notificaciones funcionan correctamente!', data: { type: 'system' } },
+    content: { title: 'Código Ω 📡', body: '¡Las notificaciones funcionan correctamente!', data: { type: 'system' } },
     trigger: { type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL, seconds: 2 },
   });
 }

@@ -3,8 +3,8 @@ import { Profile, ROLE_LABEL } from '../lib/api';
 import { useTheme } from '../lib/theme';
 import { Avatar, Badge, T } from './ui';
 
-export function ProfileHeader({ profile, recipes, followers, following }: {
-  profile: Profile; recipes: number; followers: number; following: number;
+export function ProfileHeader({ profile, best, followers, following }: {
+  profile: Profile; best: number | null; followers: number; following: number;
 }) {
   const { colors } = useTheme();
   const stat = (n: number, label: string) => (
@@ -23,7 +23,7 @@ export function ProfileHeader({ profile, recipes, followers, following }: {
       </View>
       {profile.bio ? <T style={{ textAlign: 'center' }}>{profile.bio}</T> : null}
       <View style={{ flexDirection: 'row', alignSelf: 'stretch', backgroundColor: colors.card, borderColor: colors.border, borderWidth: 1, borderRadius: 16, paddingVertical: 12, marginTop: 4 }}>
-        {stat(recipes, 'Recetas')}
+        {stat(best ?? 0, 'Récord')}
         {stat(followers, 'Seguidores')}
         {stat(following, 'Siguiendo')}
       </View>

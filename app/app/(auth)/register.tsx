@@ -63,9 +63,9 @@ export default function Register() {
     <KeyboardAvoidingView style={{ flex: 1, backgroundColor: colors.bg }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView contentContainerStyle={{ padding: 24, gap: 14, paddingBottom: 48 }} keyboardShouldPersistTaps="handled">
         <T variant="title">Crear cuenta</T>
-        <T muted>Sumate a la comunidad y empezá a compartir tus recetas.</T>
+        <T muted>Sumate a la flota: jugá, competí en el ranking y creá tus propios desafíos.</T>
         <Field label="Nombre" value={fullName} onChangeText={setFullName} error={errors.fullName} placeholder="Ana Pérez" autoComplete="name" />
-        <Field label="Nombre de usuario" value={username} error={errors.username} placeholder="ana_cocina"
+        <Field label="Nombre de usuario" value={username} error={errors.username} placeholder="ana_operadora"
           autoCapitalize="none" hint="Así te van a ver los demás: @usuario"
           onChangeText={(t) => setUsername(t.toLowerCase().replace(/\s/g, ''))} />
         <Field label="Email" value={email} onChangeText={setEmail} error={errors.email}

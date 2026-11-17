@@ -185,7 +185,7 @@ export function ErrorView({ message, onRetry }: { message: string; onRetry?: () 
   );
 }
 
-export function Empty({ icon = 'restaurant-outline', title, subtitle, action }: {
+export function Empty({ icon = 'radio-outline', title, subtitle, action }: {
   icon?: IconName; title: string; subtitle?: string; action?: ReactNode;
 }) {
   const { colors } = useTheme();

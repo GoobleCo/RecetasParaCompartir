@@ -19,12 +19,16 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen name="index" options={{
-        title: 'Inicio', headerTitle: 'Sazón',
+        title: 'Inicio', headerTitle: 'Código Ω',
         tabBarIcon: ({ color, size }) => <Ionicons name="home" color={color} size={size} />,
       }} />
-      <Tabs.Screen name="explore" options={{
-        title: 'Explorar',
-        tabBarIcon: ({ color, size }) => <Ionicons name="search" color={color} size={size} />,
+      <Tabs.Screen name="challenges" options={{
+        title: 'Desafíos',
+        tabBarIcon: ({ color, size }) => <Ionicons name="flag" color={color} size={size} />,
+      }} />
+      <Tabs.Screen name="ranking" options={{
+        title: 'Ranking',
+        tabBarIcon: ({ color, size }) => <Ionicons name="trophy" color={color} size={size} />,
       }} />
       <Tabs.Screen name="notifications" options={{
         title: 'Avisos', headerTitle: 'Notificaciones',

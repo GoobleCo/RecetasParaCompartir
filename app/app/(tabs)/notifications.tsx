@@ -10,8 +10,8 @@ import { useUnread } from '../../lib/unread';
 import { useLoader } from '../../lib/useLoader';
 
 const ICON: Record<AppNotification['type'], IconName> = {
-  comment: 'chatbubble-ellipses', rating: 'star', follow: 'person-add', new_recipe: 'restaurant',
-  daily: 'sunny', role: 'key', system: 'information-circle',
+  comment: 'chatbubble-ellipses', rating: 'star', follow: 'person-add', new_challenge: 'flag',
+  daily: 'calendar', beaten: 'warning', weekly: 'trophy', role: 'key', system: 'information-circle',
 };
 
 function timeAgo(iso: string) {
@@ -57,8 +57,10 @@ export default function Notifications() {
       setData((d) => d?.map((x) => (x.id === n.id ? { ...x, read: true } : x)) ?? d);
       markRead(n.id).then(refreshUnread).catch(() => {});
     }
-    if (n.recipe_id) router.push(`/recipe/${n.recipe_id}`);
+    if (n.challenge_id) router.push(`/challenge/${n.challenge_id}`);
     else if (n.actor_id && n.type === 'follow') router.push(`/user/${n.actor_id}`);
+    else if (n.type === 'daily') router.push({ pathname: '/game', params: { mode: 'daily' } });
+    else if (n.type === 'beaten' || n.type === 'weekly') router.push('/(tabs)/ranking');
   };
 
   const remove = (n: AppNotification) =>
@@ -84,7 +86,7 @@ export default function Notifications() {
       contentContainerStyle={{ padding: 12, gap: 8 }}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => { refresh(); refreshUnread(); }} tintColor={colors.primary} />}
       ListEmptyComponent={<Empty icon="notifications-off-outline" title="No tenés notificaciones"
-        subtitle="Te avisamos cuando comenten o valoren tus recetas, o alguien te siga." />}
+        subtitle="Te avisamos si alguien te supera en el ranking, comenta tus desafíos o te sigue." />}
       ListFooterComponent={data && data.length > 0 ? <T variant="small" muted style={{ textAlign: 'center', marginTop: 8 }}>Mantené presionada una notificación para borrarla</T> : null}
       renderItem={({ item }) => (
         <Pressable onPress={() => open(item)} onLongPress={() => remove(item)} style={({ pressed }) => ({

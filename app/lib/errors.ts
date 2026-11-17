@@ -30,6 +30,8 @@ const RULES: [RegExp, string][] = [
   [/jwt expired|invalid jwt|refresh token/i, 'Tu sesión expiró. Volvé a iniciar sesión.'],
   [/payload too large|exceeded the maximum allowed size|entity too large/i, 'La imagen es demasiado grande (máximo 5 MB).'],
   [/mime type .* is not supported|invalid mime/i, 'Formato de imagen no admitido (usá JPG, PNG o WEBP).'],
+  [/protocols_code_key/i, 'Ya existe un protocolo con ese código de flechas.'],
+  [/protocols_name_key/i, 'Ya existe un protocolo con ese nombre.'],
   [/duplicate key|23505|already exists/i, 'Ya existe un registro con esos datos.'],
   [/violates check constraint|23514/i, 'Algún dato no cumple el formato requerido.'],
   [/violates foreign key|23503/i, 'El registro relacionado ya no existe.'],
@@ -40,10 +42,10 @@ export function friendlyError(err: unknown): string {
   if (err instanceof AppError) return err.message;
   const e = err as AnyError;
   const text = `${e?.message ?? ''} ${e?.code ?? ''}`;
+  // Mensajes propios que lanzamos desde la base de datos ya vienen en castellano
+  if (e?.message && /[áéíóúñ¿¡]|no podés|inexistente|inválido|partida|desafío|protocolo/i.test(e.message)) return e.message;
   for (const [re, msg] of RULES) if (re.test(text)) return msg;
   if (e?.status && e.status >= 500) return 'El servidor tuvo un problema. Intentá de nuevo en un rato.';
-  // Mensajes propios que lanzamos desde la base de datos ya vienen en castellano
-  if (e?.message && /[áéíóúñ¿¡]|no podés|inexistente|inválido/i.test(e.message)) return e.message;
   return 'Ocurrió un error inesperado. Intentá de nuevo.';
 }
 
