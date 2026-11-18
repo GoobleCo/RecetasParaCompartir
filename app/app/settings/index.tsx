@@ -1,7 +1,8 @@
 import Constants from 'expo-constants';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, ScrollView, Switch, View } from 'react-native';
+import { ScrollView, Switch, View } from 'react-native';
+import { Alert } from '../../lib/alert';
 import { Button, Card, Chip, SectionHeader, styles, T } from '../../components/ui';
 import { deleteMyAccount, Profile, ROLE_LABEL, updateMyProfile } from '../../lib/api';
 import { useAuth } from '../../lib/auth';

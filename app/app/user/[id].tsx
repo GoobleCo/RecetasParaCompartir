@@ -1,6 +1,7 @@
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, RefreshControl, ScrollView } from 'react-native';
+import { RefreshControl, ScrollView } from 'react-native';
+import { Alert } from '../../lib/alert';
 import { ProfileHeader } from '../../components/ProfileHeader';
 import { ChallengeCard } from '../../components/ChallengeCard';
 import { Button, Empty, ErrorView, Loading, SectionHeader, styles } from '../../components/ui';

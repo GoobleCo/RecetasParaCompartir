@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, ScrollView } from 'react-native';
+import { ScrollView } from 'react-native';
+import { Alert } from '../../lib/alert';
 import { Button, Field, styles, T } from '../../components/ui';
 import { useAuth } from '../../lib/auth';
 import { AppError, friendlyError } from '../../lib/errors';

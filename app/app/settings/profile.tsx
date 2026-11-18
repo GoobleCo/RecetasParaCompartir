@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { Alert } from '../../lib/alert';
 import type { ImagePickerAsset } from 'expo-image-picker';
 import { Avatar, Button, Field, Loading, styles } from '../../components/ui';
 import { updateMyProfile, usernameAvailable } from '../../lib/api';

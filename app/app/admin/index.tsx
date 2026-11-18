@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, Pressable, RefreshControl, ScrollView, TextInput, View } from 'react-native';
+import { Pressable, RefreshControl, ScrollView, TextInput, View } from 'react-native';
+import { Alert } from '../../lib/alert';
 import { ArrowKey, CodeView } from '../../components/Arrows';
 import { Avatar, Badge, Button, Card, Chip, Empty, ErrorView, Field, IconButton, Loading, styles, T } from '../../components/ui';
 import {

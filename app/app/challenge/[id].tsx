@@ -1,6 +1,7 @@
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, Pressable, RefreshControl, ScrollView, Share, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, RefreshControl, ScrollView, Share, View } from 'react-native';
+import { Alert } from '../../lib/alert';
 import { CodeView } from '../../components/Arrows';
 import { LeaderList } from '../../components/LeaderList';
 import { Avatar, Badge, Button, Card, ErrorView, Field, IconButton, Loading, SectionHeader, Stars, T } from '../../components/ui';

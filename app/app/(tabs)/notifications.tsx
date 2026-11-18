@@ -1,7 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router, useNavigation } from 'expo-router';
 import { useEffect } from 'react';
-import { Alert, FlatList, Pressable, RefreshControl, View } from 'react-native';
+import { FlatList, Pressable, RefreshControl, View } from 'react-native';
+import { Alert } from '../../lib/alert';
 import { Empty, ErrorView, IconName, Loading, T } from '../../components/ui';
 import { AppNotification, deleteNotification, listNotifications, markAllRead, markRead } from '../../lib/api';
 import { friendlyError } from '../../lib/errors';

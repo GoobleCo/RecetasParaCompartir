@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView, Switch, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, Switch, View } from 'react-native';
+import { Alert } from '../lib/alert';
 import { Challenge, ChallengeInput, getProtocols, ProtocolRow } from '../lib/api';
 import { friendlyError } from '../lib/errors';
 import { CATEGORY_COLOR, CATEGORY_LABEL, codeToArrows, estimateDifficulty, ProtocolCategory } from '../lib/game';
